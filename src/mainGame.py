@@ -1,12 +1,13 @@
 from random import shuffle
 from Player import Player
 from Tile import Tile
+import pygame
+import os
 
 
-BOARD_SIZE = 11
-WINDOW_SIZE = 900
+BOARD_SIZE = 8
+WINDOW_SIZE = 800
 TILE_SIZE = WINDOW_SIZE / BOARD_SIZE
-
 
 def createPlayersArray(amountOfPlayers):
     if amountOfPlayers < 2 or amountOfPlayers > 4:
@@ -55,13 +56,18 @@ def main():
     board = createBoard()
     playersArr = createPlayersArray(4)
     
-    for row in board:
-        for col in row:
-            if col == 0:
-                print(0, end="\t")
-            else:
-                print(col.wall, end="\t")
-        print()
+    WIN = pygame.display.set_mode((WINDOW_SIZE, WINDOW_SIZE))
+    pygame.display.set_caption("Monopoly")
+    
+    clock = pygame.time.Clock()
+    
+    gameRunning = True
+    while gameRunning:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+
+        clock.tick(60)
 
 
 if __name__ == "__main__":

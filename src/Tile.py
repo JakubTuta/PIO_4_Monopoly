@@ -1,9 +1,10 @@
-from mainGame import TILE_SIZE
-
+BOARD_SIZE = 8
+WINDOW_SIZE = 800
+TILE_SIZE = WINDOW_SIZE / BOARD_SIZE
 
 class Tile:
     id = 0
-    def __init__(self, xPos = 0, yPos = 0, wall = "bottom"):
+    def __init__(self, xPos = 0, yPos = 0, wall = "bottom", freeTileGraphic = None, boughtTileGraphic = None):
         self.__xPos = xPos
         self.__yPos = yPos
         self.__tileWidth = 0
