@@ -5,9 +5,9 @@ Projekt na zajęcia PIO i KCK
 Gra napisana w Pythonie z wykorzystaniem biblioteki Pygame
 
 # Jak uruchomić
-Sklonować repozytorium
-Zainstalować wymagane biblioteki:
-  pygame - (pip install pygame / pip install pygame --pre (jeżeli pierwsze nie działa))
+Sklonować repozytorium\
+Zainstalować wymagane biblioteki:\
+  pygame - (pip install pygame / pip install pygame --pre (jeżeli pierwsze nie działa))\
 Uruchomić plik mainGame.py
 
 # Konwencje nazewnicze i językowe
