@@ -4,6 +4,7 @@ from Tile import Tile
 import pygame
 import os
 
+ASSETS_DIR = os.path.join(os.path.dirname(__file__), 'assets')
 
 BOARD_SIZE = 8
 WINDOW_SIZE = 800
@@ -19,37 +20,40 @@ def createPlayersArray(amountOfPlayers):
 
 
 def createBoard():
-    boardArr = [[0 for j in range(BOARD_SIZE)] for i in range(BOARD_SIZE)]
-    
+    boardArr = [[None for _ in range(BOARD_SIZE)] for _ in range(BOARD_SIZE)]
+
     # bottom wall
     for i in range(BOARD_SIZE - 1, 0, -1):
         if i == BOARD_SIZE - 1:
-            boardArr[BOARD_SIZE - 1][i] = Tile(i, BOARD_SIZE - 1, "corner")
+            boardArr[BOARD_SIZE - 1][i] = Tile(i, BOARD_SIZE - 1, "corner","Type=Start.png")
         else:
-            boardArr[BOARD_SIZE - 1][i] = Tile(i, BOARD_SIZE - 1, "bottom")
-    
+            boardArr[BOARD_SIZE - 1][i] = Tile(i, BOARD_SIZE - 1, "bottom","State=Empty, Type=Warsaw.png")
+
     # left wall
     for i in range(BOARD_SIZE - 1, 0, -1):
         if i == BOARD_SIZE - 1:
-            boardArr[i][0] = Tile(0, i, "corner")
+            boardArr[i][0] = Tile(0, i, "corner","Type=Start.png")
         else:
-            boardArr[i][0] = Tile(0, i, "left")
-    
+            boardArr[i][0] = Tile(0, i, "left","State=Empty, Type=Paris.png")
+
     # top wall
     for i in range(BOARD_SIZE - 1):
         if i == 0:
-            boardArr[0][i] = Tile(i, 0, "corner")
+            boardArr[0][i] = Tile(i, 0, "corner","Type=Start.png")
         else:
-            boardArr[0][i] = Tile(i, 0, "top")
-    
+            boardArr[0][i] = Tile(i, 0, "top","State=Empty, Type=Rome.png")
+
     # right wall
     for i in range(BOARD_SIZE - 1):
         if i == 0:
-            boardArr[i][BOARD_SIZE - 1] = Tile(BOARD_SIZE - 1, i, "corner")
+            boardArr[i][BOARD_SIZE - 1] = Tile(BOARD_SIZE - 1, i, "corner","Type=Start.png")
         else:
-            boardArr[i][BOARD_SIZE - 1] = Tile(BOARD_SIZE - 1, i, "right")
-        
+            boardArr[i][BOARD_SIZE - 1] = Tile(BOARD_SIZE - 1, i, "right","State=Empty, Type=Oslo.png")
+
+
+
     return boardArr
+
 
 
 def main():
@@ -67,6 +71,15 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
 
+        WIN.fill((0, 0, 0))
+
+        # Rysowanie kafelków z grafikami
+        for row in board:
+            for tile in row:
+                if tile is not None:
+                    tile.draw(WIN)
+
+        pygame.display.update()
         clock.tick(60)
 
 

@@ -1,6 +1,6 @@
 import pygame
 import os
-
+ASSETS_DIR = "assets"
 BOARD_SIZE = 8
 WINDOW_SIZE = 800
 TILE_SIZE = WINDOW_SIZE / BOARD_SIZE
@@ -8,14 +8,19 @@ TILE_SIZE = WINDOW_SIZE / BOARD_SIZE
 class Tile:
     id = 0
 
-    def __init__(self, WIN, xPos, yPos, name):
+    def __init__(self, xPos, yPos, name,image_path):
         self.xPos = xPos
         self.yPos = yPos
         self.name = name
-        self.WIN = WIN
         
         self.id = Tile.id
         Tile.id += 1
+        self.image = pygame.image.load(os.path.join(ASSETS_DIR,image_path))
+    
+    def draw(self, surface):
+        tile_rect = pygame.Rect(self.xPos * TILE_SIZE, self.yPos * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+        surface.blit(self.image, tile_rect)
+
 
 
 class Property(Tile):
