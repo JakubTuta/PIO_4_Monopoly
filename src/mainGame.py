@@ -25,30 +25,30 @@ def createBoard():
     # bottom wall
     for i in range(BOARD_SIZE - 1, 0, -1):
         if i == BOARD_SIZE - 1:
-            boardArr[BOARD_SIZE - 1][i] = Tile(i, BOARD_SIZE - 1, "corner","Type=Start.png")
+            boardArr[BOARD_SIZE - 1][i] = Tile(i, BOARD_SIZE - 1,"bot", "corner","Type=Start.png")
         else:
-            boardArr[BOARD_SIZE - 1][i] = Tile(i, BOARD_SIZE - 1, "bottom","State=Empty, Type=Warsaw.png")
+            boardArr[BOARD_SIZE - 1][i] = Tile(i, BOARD_SIZE - 1,"bot", "bottom","State=Empty, Type=Warsaw.png")
 
     # left wall
     for i in range(BOARD_SIZE - 1, 0, -1):
         if i == BOARD_SIZE - 1:
-            boardArr[i][0] = Tile(0, i, "corner","Type=Start.png")
+            boardArr[i][0] = Tile(0, i, "corner","left","Type=Start.png")
         else:
-            boardArr[i][0] = Tile(0, i, "left","State=Empty, Type=Paris.png")
+            boardArr[i][0] = Tile(0, i, "left","left","State=Empty, Type=Paris.png")
 
     # top wall
     for i in range(BOARD_SIZE - 1):
         if i == 0:
-            boardArr[0][i] = Tile(i, 0, "corner","Type=Start.png")
+            boardArr[0][i] = Tile(i, 0, "corner","top","Type=Start.png")
         else:
-            boardArr[0][i] = Tile(i, 0, "top","State=Empty, Type=Rome.png")
+            boardArr[0][i] = Tile(i, 0, "top","top","State=Empty, Type=Rome.png")
 
     # right wall
     for i in range(BOARD_SIZE - 1):
         if i == 0:
-            boardArr[i][BOARD_SIZE - 1] = Tile(BOARD_SIZE - 1, i, "corner","Type=Start.png")
+            boardArr[i][BOARD_SIZE - 1] = Tile(BOARD_SIZE - 1, i, "corner","right","Type=Start.png")
         else:
-            boardArr[i][BOARD_SIZE - 1] = Tile(BOARD_SIZE - 1, i, "right","State=Empty, Type=Oslo.png")
+            boardArr[i][BOARD_SIZE - 1] = Tile(BOARD_SIZE - 1, i, "right","right","State=Empty, Type=Oslo.png")
 
 
 
