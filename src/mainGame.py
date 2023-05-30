@@ -1,8 +1,9 @@
-from random import shuffle
+from random import shuffle, randint
 from Player import Player
 from Tile import Tile, Property, Special, WINDOW_SIZE
-import pygame
+import pygame                                                   # pip install pygame / pip install pygame --pre
 import os
+
 
 def createPlayersArray(amountOfPlayers):
     if amountOfPlayers < 2 or amountOfPlayers > 4:
@@ -55,6 +56,14 @@ def createBoard(WIN):
     return boardArr
 
 
+def tossDice(WIN, diceGraphs):
+    moves = randint(1, 6)
+    
+    WIN.blit(diceGraphs[moves], (WINDOW_SIZE / 2 - 25, WINDOW_SIZE / 2 - 25))
+    
+    return moves
+
+
 def draw(WIN, board):
     WIN.fill((0, 0, 0))
 
@@ -66,6 +75,10 @@ def main():
     pygame.init()
     WIN = pygame.display.set_mode((WINDOW_SIZE, WINDOW_SIZE))
     pygame.display.set_caption("Monopoly")
+    
+    diceGraphs = {}
+    for i in range(1, 7):
+        diceGraphs[i] = pygame.Surface.convert_alpha(pygame.transform.scale(pygame.image.load(os.path.join(f"assets/State=Dice_{i}.png")), (50, 50)))
     
     board = createBoard(WIN)
     playersArr = createPlayersArray(4)
@@ -79,6 +92,7 @@ def main():
                 pygame.quit()
 
         draw(WIN, board)
+        moves = tossDice(WIN, diceGraphs)
         
         pygame.display.update()
         clock.tick(60)
