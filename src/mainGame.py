@@ -10,7 +10,7 @@ def createPlayersArray(amountOfPlayers):
     
     colors = ["Red", "Green", "Blue", "Yellow"]
     shuffle(colors)
-    return [Player(0, 0, colors[i]) for i in range(amountOfPlayers)]
+    return [Player(7, 7, colors[i]) for i in range(amountOfPlayers)]
 
 
 def createBoard(WIN):
@@ -78,6 +78,8 @@ def main():
     board = createBoard(WIN)
     playersArr = createPlayersArray(4)
     currentPlayerIndex = 0
+    is_move_allowed = True  # Zmienna określająca, czy można wykonywać ruchy
+    enter_pressed = False  # Zmienna śledząca, czy klawisz Enter został wciśnięty
     
     clock = pygame.time.Clock()
 
@@ -87,21 +89,33 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
-                    movePlayer(playersArr[currentPlayerIndex], "up", board)
-                elif event.key == pygame.K_DOWN:
-                    movePlayer(playersArr[currentPlayerIndex], "down", board)
-                elif event.key == pygame.K_LEFT:
-                    movePlayer(playersArr[currentPlayerIndex], "left", board)
-                elif event.key == pygame.K_RIGHT:
-                    movePlayer(playersArr[currentPlayerIndex], "right", board)               
+                if is_move_allowed:
+                    if event.key == pygame.K_UP:
+                        movePlayer(playersArr[currentPlayerIndex], "up", board)
+                    elif event.key == pygame.K_DOWN:
+                        movePlayer(playersArr[currentPlayerIndex], "down", board)
+                    elif event.key == pygame.K_LEFT:
+                        movePlayer(playersArr[currentPlayerIndex], "left", board)
+                    elif event.key == pygame.K_RIGHT:
+                        movePlayer(playersArr[currentPlayerIndex], "right", board)    
+                if event.key == pygame.K_RETURN:  # Naciśnięcie klawisza Enter
+                    enter_pressed = True           
 
         draw(WIN, board, playersArr)
         
+        if enter_pressed:
+            is_move_allowed = False  # Zablokowanie ruchu
+            enter_pressed = False
+
         pygame.display.update()
         clock.tick(60)
 
-        currentPlayerIndex = (currentPlayerIndex + 1) % len(playersArr)  # Update current player index
+        if not is_move_allowed:
+            if currentPlayerIndex < len(playersArr) - 1:
+                currentPlayerIndex += 1
+            else:
+                currentPlayerIndex = 0
+            is_move_allowed = True  # Odblokowanie ruchu dla nowego gracza
         
     pygame.quit()    
 
