@@ -1,6 +1,6 @@
 import pygame
 import os
-ASSETS_DIR = "assets"
+
 BOARD_SIZE = 8
 WINDOW_SIZE = 800
 TILE_SIZE = WINDOW_SIZE / BOARD_SIZE
@@ -8,27 +8,14 @@ TILE_SIZE = WINDOW_SIZE / BOARD_SIZE
 class Tile:
     id = 0
 
-    def __init__(self, xPos, yPos, direction,name,image_path):
+    def __init__(self, WIN, xPos, yPos, name):
         self.xPos = xPos
         self.yPos = yPos
-        self.direction = direction
         self.name = name
+        self.WIN = WIN
         
         self.id = Tile.id
         Tile.id += 1
-        self.image = pygame.image.load(os.path.join(ASSETS_DIR,image_path))
-        self.rotated_image_left = pygame.transform.rotate(self.image, 90)  # Obrót grafiki o 90 stopni
-        self.rotated_image_right = pygame.transform.rotate(self.image, -90)  # Obrót grafiki o -90 stopni
-    
-    def draw(self, surface):
-        tile_rect = pygame.Rect(self.xPos * TILE_SIZE, self.yPos * TILE_SIZE, TILE_SIZE, TILE_SIZE)
-        if self.direction == "left":
-            surface.blit(self.rotated_image_left, tile_rect)
-        elif self.direction == "right":
-            surface.blit(self.rotated_image_right, tile_rect)
-        else:
-            surface.blit(self.image, tile_rect)
-
 
 
 class Property(Tile):
