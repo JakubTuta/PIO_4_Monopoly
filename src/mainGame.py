@@ -1,6 +1,6 @@
 from random import shuffle, randint
 from Player import Player
-from Tile import Tile, Property, Special, WINDOW_SIZE
+from Tile import Tile, Property, Special, WINDOW_SIZE, TILE_SIZE
 import pygame                                                   # pip install pygame / pip install pygame --pre
 import os
 
@@ -9,9 +9,13 @@ DICE_SIZE = 60
 DICE_POS = WINDOW_SIZE / 2 - DICE_SIZE / 2
 
 BUTTON_WIDTH = 100
-BUTTON_HEIGHT = 50
-BUTTON_POSX = WINDOW_SIZE / 2 - BUTTON_WIDTH / 2
-BUTTON_POSY = WINDOW_SIZE / 2 - DICE_SIZE / 2 + DICE_SIZE + 10
+BUTTON_HEIGHT = 45
+
+ROLL_DICE_BUTTON_POSX = WINDOW_SIZE / 2 - BUTTON_WIDTH / 2
+ROLL_DICE_BUTTON_POSY = WINDOW_SIZE / 2 - DICE_SIZE / 2 + DICE_SIZE + 10
+
+NEXT_TURN_BUTTON_POSX = WINDOW_SIZE / 2 - BUTTON_WIDTH / 2
+NEXT_TURN_BUTTON_POSY = TILE_SIZE + 20
 
 
 def createPlayersArray(amountOfPlayers):
@@ -20,7 +24,11 @@ def createPlayersArray(amountOfPlayers):
     
     colors = ["red", "green", "blue", "purple"]
     shuffle(colors)
-    return [Player(0, 0, colors[i]) for i in range(amountOfPlayers)]
+    players = {}
+    for color in colors:
+        players[color] = Player(0, 0, color)
+    
+    return players, colors
 
 
 def createBoard(WIN):
@@ -74,19 +82,22 @@ def tossDice():
 def handleMouseClick(mousePos):
     mouseX, mouseY = mousePos
     
-    if BUTTON_POSX <= mouseX <= BUTTON_POSX + BUTTON_WIDTH and BUTTON_POSY <= mouseY <= BUTTON_POSY + BUTTON_HEIGHT:
+    if ROLL_DICE_BUTTON_POSX <= mouseX <= ROLL_DICE_BUTTON_POSX + BUTTON_WIDTH and ROLL_DICE_BUTTON_POSY <= mouseY <= ROLL_DICE_BUTTON_POSY + BUTTON_HEIGHT:
         return 1
+    elif NEXT_TURN_BUTTON_POSX <= mouseX <= NEXT_TURN_BUTTON_POSX + BUTTON_WIDTH and NEXT_TURN_BUTTON_POSY <= mouseY <= NEXT_TURN_BUTTON_POSY + BUTTON_HEIGHT:
+        return 2
     return 0
 
 
-def draw(WIN, board, diceGraphs, buttonGraphic, moves):
+def draw(WIN, board, diceGraphs, RollDiceButtonGraphic, NextTurnButtonGraphic, moves):
     WIN.fill((0, 0, 0))
 
     for tile in board:
         tile.draw()
     
     WIN.blit(diceGraphs[moves], (DICE_POS, DICE_POS))
-    WIN.blit(buttonGraphic, (BUTTON_POSX, BUTTON_POSY))
+    WIN.blit(RollDiceButtonGraphic, (ROLL_DICE_BUTTON_POSX, ROLL_DICE_BUTTON_POSY))
+    WIN.blit(NextTurnButtonGraphic, (NEXT_TURN_BUTTON_POSX, NEXT_TURN_BUTTON_POSY))
 
 
 def main(): 
@@ -97,10 +108,13 @@ def main():
     diceGraphs = {}
     for i in range(1, 7):
         diceGraphs[i] = pygame.Surface.convert_alpha(pygame.transform.scale(pygame.image.load(os.path.join(f"assets/State=Dice_{i}.png")), (DICE_SIZE, DICE_SIZE)))
-    buttonGraphic = pygame.Surface.convert_alpha(pygame.transform.scale(pygame.image.load(os.path.join(f"assets/State=Dice_button.png")), (BUTTON_WIDTH, BUTTON_HEIGHT)))
+    RollDiceButtonGraphic = pygame.Surface.convert_alpha(pygame.transform.scale(pygame.image.load(os.path.join(f"assets/State=Dice_button.png")), (BUTTON_WIDTH, BUTTON_HEIGHT)))
+    NextTurnButtonGraphic = pygame.Surface.convert_alpha(pygame.transform.scale(pygame.image.load(os.path.join(f"assets/Next_turn_button.png")), (BUTTON_WIDTH, BUTTON_HEIGHT)))
     
     board = createBoard(WIN)
-    playersArr = createPlayersArray(4)
+    players, turns = createPlayersArray(4)
+    currentTurn = turns.pop(0)
+    turns.append(currentTurn)
     
     clock = pygame.time.Clock()
 
@@ -110,13 +124,20 @@ def main():
         if event.type == pygame.QUIT:
             break
 
-        draw(WIN, board, diceGraphs, buttonGraphic, moves)
+        draw(WIN, board, diceGraphs, RollDiceButtonGraphic, NextTurnButtonGraphic, moves)
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if handleMouseClick(pygame.mouse.get_pos()) == 1:
+            action = handleMouseClick(pygame.mouse.get_pos())
+            if action == 1 and not players[currentTurn].hasRolled: # roll the dice button clicked
+                players[currentTurn].hasRolled = True
                 moves = tossDice()
+            elif action == 2: # next turn button clicked
+                players[currentTurn].hasRolled = False
+                currentTurn = turns.pop(0)
+                turns.append(currentTurn)
         
         pygame.display.update()
         clock.tick(60)
+
 
 if __name__ == "__main__":
     main()
