@@ -4,6 +4,7 @@ class Player:
         self.__yPos = yPos
         self.__tokenColor = tokenColor
         self.__moneyAvailable = moneyAvailable
+        self.hasRolled = False
     
     def getPos(self):
         return (self.__xPos, self.__yPos)
