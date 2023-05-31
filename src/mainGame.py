@@ -5,6 +5,15 @@ import pygame                                                   # pip install py
 import os
 
 
+DICE_SIZE = 60
+DICE_POS = WINDOW_SIZE / 2 - DICE_SIZE / 2
+
+BUTTON_WIDTH = 100
+BUTTON_HEIGHT = 50
+BUTTON_POSX = WINDOW_SIZE / 2 - BUTTON_WIDTH / 2
+BUTTON_POSY = WINDOW_SIZE / 2 - DICE_SIZE / 2 + DICE_SIZE + 10
+
+
 def createPlayersArray(amountOfPlayers):
     if amountOfPlayers < 2 or amountOfPlayers > 4:
         return
@@ -56,19 +65,28 @@ def createBoard(WIN):
     return boardArr
 
 
-def tossDice(WIN, diceGraphs):
+def tossDice():
     moves = randint(1, 6)
-    
-    WIN.blit(diceGraphs[moves], (WINDOW_SIZE / 2 - 25, WINDOW_SIZE / 2 - 25))
     
     return moves
 
 
-def draw(WIN, board):
+def handleMouseClick(mousePos):
+    mouseX, mouseY = mousePos
+    
+    if BUTTON_POSX <= mouseX <= BUTTON_POSX + BUTTON_WIDTH and BUTTON_POSY <= mouseY <= BUTTON_POSY + BUTTON_HEIGHT:
+        return 1
+    return 0
+
+
+def draw(WIN, board, diceGraphs, buttonGraphic, moves):
     WIN.fill((0, 0, 0))
 
     for tile in board:
         tile.draw()
+    
+    WIN.blit(diceGraphs[moves], (DICE_POS, DICE_POS))
+    WIN.blit(buttonGraphic, (BUTTON_POSX, BUTTON_POSY))
 
 
 def main(): 
@@ -78,21 +96,24 @@ def main():
     
     diceGraphs = {}
     for i in range(1, 7):
-        diceGraphs[i] = pygame.Surface.convert_alpha(pygame.transform.scale(pygame.image.load(os.path.join(f"assets/State=Dice_{i}.png")), (50, 50)))
+        diceGraphs[i] = pygame.Surface.convert_alpha(pygame.transform.scale(pygame.image.load(os.path.join(f"assets/State=Dice_{i}.png")), (DICE_SIZE, DICE_SIZE)))
+    buttonGraphic = pygame.Surface.convert_alpha(pygame.transform.scale(pygame.image.load(os.path.join(f"assets/State=Dice_button.png")), (BUTTON_WIDTH, BUTTON_HEIGHT)))
     
     board = createBoard(WIN)
     playersArr = createPlayersArray(4)
     
     clock = pygame.time.Clock()
 
-    gameRunning = True
-    while gameRunning:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
+    moves = 1
+    while True:
+        event = pygame.event.wait()
+        if event.type == pygame.QUIT:
+            break
 
-        draw(WIN, board)
-        moves = tossDice(WIN, diceGraphs)
+        draw(WIN, board, diceGraphs, buttonGraphic, moves)
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if handleMouseClick(pygame.mouse.get_pos()) == 1:
+                moves = tossDice()
         
         pygame.display.update()
         clock.tick(60)
