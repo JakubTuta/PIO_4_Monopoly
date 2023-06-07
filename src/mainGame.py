@@ -108,8 +108,8 @@ def drawPlayerTextMoney(WIN, players, turn):
     WIN.blit(labelTurnText, ((WINDOW_SIZE / 2 - textWidth / 2), (DICE_POS - textHeight - 10)))
     
     for player in players.values():
-        color = player.color
-        money = player.moneyAvailable
+        color = player.getTokenColor()
+        money = player.getMoneyAvailable()
         
         playerText = f"Player {color}"
         playerMoney = f"Money: {money}"
