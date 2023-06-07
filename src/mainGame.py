@@ -14,8 +14,17 @@ BUTTON_HEIGHT = 45
 ROLL_DICE_BUTTON_POSX = WINDOW_SIZE / 2 - BUTTON_WIDTH / 2
 ROLL_DICE_BUTTON_POSY = WINDOW_SIZE / 2 - DICE_SIZE / 2 + DICE_SIZE + 10
 
-NEXT_TURN_BUTTON_POSX = WINDOW_SIZE / 2 - BUTTON_WIDTH / 2
-NEXT_TURN_BUTTON_POSY = TILE_SIZE + 20
+NEXT_TURN_BUTTON_POSX = ROLL_DICE_BUTTON_POSX
+NEXT_TURN_BUTTON_POSY = ROLL_DICE_BUTTON_POSY + BUTTON_HEIGHT + 5
+
+COLORS = {
+    "BLACK": (0, 0, 0),
+    "WHITE": (255, 255, 255),
+    "red": (255, 0, 0),
+    "green": (0, 255, 0),
+    "blue": (0, 0, 255),
+    "purple": (238, 130, 238)
+}
 
 
 def createPlayersArray(amountOfPlayers):
@@ -89,7 +98,45 @@ def handleMouseClick(mousePos):
     return 0
 
 
-def draw(WIN, board, diceGraphs, RollDiceButtonGraphic, NextTurnButtonGraphic, moves):
+def drawPlayerTextMoney(WIN, players, turn):
+    font = pygame.font.SysFont(None, 30)
+    turnFont = pygame.font.SysFont(None, 40, bold=True)
+    
+    turnText = f"{turn}'s turn"
+    labelTurnText = turnFont.render(turnText, True, COLORS[turn])
+    textWidth, textHeight = turnFont.size(turnText)
+    WIN.blit(labelTurnText, ((WINDOW_SIZE / 2 - textWidth / 2), (DICE_POS - textHeight - 10)))
+    
+    for player in players.values():
+        color = player.color
+        money = player.moneyAvailable
+        
+        playerText = f"Player {color}"
+        playerMoney = f"Money: {money}"
+        
+        labelPlayerText = font.render(playerText, True, COLORS[color])
+        labelPlayerMoney = font.render(playerMoney, True, COLORS["WHITE"])
+        
+        textWidth, textHeight = font.size(playerText)
+        
+        if color == "red":
+            xPos = (WINDOW_SIZE / 2) - (textWidth / 2)
+            yPos = WINDOW_SIZE - TILE_SIZE - 60
+        elif color == "green":
+            xPos = TILE_SIZE + 20
+            yPos = (WINDOW_SIZE / 2) - textHeight
+        elif color == "blue":
+            xPos = (WINDOW_SIZE / 2) - (textWidth / 2)
+            yPos = TILE_SIZE + 20
+        else:
+            xPos = WINDOW_SIZE - TILE_SIZE - 20 - textWidth
+            yPos = yPos = (WINDOW_SIZE / 2) - textHeight
+        
+        WIN.blit(labelPlayerText, (xPos, yPos))
+        WIN.blit(labelPlayerMoney, (xPos, yPos + textHeight + 10))
+
+
+def draw(WIN, board, players, diceGraphs, RollDiceButtonGraphic, NextTurnButtonGraphic, moves, turn):
     WIN.fill((0, 0, 0))
 
     for tile in board:
@@ -98,6 +145,8 @@ def draw(WIN, board, diceGraphs, RollDiceButtonGraphic, NextTurnButtonGraphic, m
     WIN.blit(diceGraphs[moves], (DICE_POS, DICE_POS))
     WIN.blit(RollDiceButtonGraphic, (ROLL_DICE_BUTTON_POSX, ROLL_DICE_BUTTON_POSY))
     WIN.blit(NextTurnButtonGraphic, (NEXT_TURN_BUTTON_POSX, NEXT_TURN_BUTTON_POSY))
+    
+    drawPlayerTextMoney(WIN, players, turn)
 
 
 def main(): 
@@ -124,7 +173,7 @@ def main():
         if event.type == pygame.QUIT:
             break
 
-        draw(WIN, board, diceGraphs, RollDiceButtonGraphic, NextTurnButtonGraphic, moves)
+        draw(WIN, board, players, diceGraphs, RollDiceButtonGraphic, NextTurnButtonGraphic, moves, currentTurn)
         if event.type == pygame.MOUSEBUTTONDOWN:
             action = handleMouseClick(pygame.mouse.get_pos())
             if action == 1 and not players[currentTurn].hasRolled: # roll the dice button clicked
