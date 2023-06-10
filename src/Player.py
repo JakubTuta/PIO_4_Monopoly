@@ -1,5 +1,6 @@
 class Player:
     def __init__(self, xPos = 0, yPos = 0, tokenColor = "white", moneyAvailable = 1500):
+        self._currentTile = 0
         self.__xPos = xPos
         self.__yPos = yPos
         self.__tokenColor = tokenColor
@@ -14,3 +15,12 @@ class Player:
     
     def getMoneyAvailable(self):
         return self.__moneyAvailable
+    
+    def addMoney(self, amount):
+        self.__moneyAvailable += amount
+
+    def getCurrentTile(self):
+        return self._currentTile
+
+    def setCurrentTile(self, newTile):
+        self._currentTile = newTile
