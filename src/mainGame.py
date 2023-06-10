@@ -3,7 +3,12 @@ from Player import Player
 from Tile import Tile, Property, Special, WINDOW_SIZE, TILE_SIZE
 import pygame                                                   # pip install pygame / pip install pygame --pre
 import os
-
+PLAYER_IMAGES = {
+    "red": pygame.image.load(os.path.join("assets", "Type=red.png")),
+    "green": pygame.image.load(os.path.join("assets", "Type=green.png")),
+    "blue": pygame.image.load(os.path.join("assets", "Type=blue.png")),
+    "yellow": pygame.image.load(os.path.join("assets", "Type=yellow.png"))
+}
 
 DICE_SIZE = 60
 DICE_POS = WINDOW_SIZE / 2 - DICE_SIZE / 2
@@ -23,7 +28,7 @@ COLORS = {
     "red": (255, 0, 0),
     "green": (0, 255, 0),
     "blue": (0, 0, 255),
-    "purple": (238, 130, 238)
+    "yellow": (255, 214, 0)
 }
 
 
@@ -31,11 +36,12 @@ def createPlayersArray(amountOfPlayers):
     if amountOfPlayers < 2 or amountOfPlayers > 4:
         return
     
-    colors = ["red", "green", "blue", "purple"]
+    colors = ["red", "green", "blue", "yellow"]
     shuffle(colors)
     players = {}
     for color in colors:
-        players[color] = Player(0, 0, color)
+        players[color] = Player(7, 7, color)
+        players[color].setCurrentTile(0)
     
     return players, colors
 
@@ -44,40 +50,40 @@ def createBoard(WIN):
     boardArr = []
     
     # bottom wall
-    boardArr.append(Special(WIN, 7, 7, "Start" ,"Type=Start.png"))
-    boardArr.append(Property(WIN, 6, 7, "Lodz", "bottom", "State=Empty, Type=Lodz.png", "State=Bought, Type=Lodz.png"))
-    boardArr.append(Property(WIN, 5, 7, "Cracow", "bottom", "State=Empty, Type=Cracow.png", "State=Bought, Type=Cracow.png"))
-    boardArr.append(Property(WIN, 4, 7, "Warsaw", "bottom", "State=Empty, Type=Warsaw.png", "State=Bought, Type=Warsaw.png"))
-    boardArr.append(Property(WIN, 3, 7, "Berlin", "bottom", "State=Empty, Type=Berlin.png", "State=Bought, Type=Berlin.png"))
-    boardArr.append(Property(WIN, 2, 7, "Munich", "bottom", "State=Empty, Type=Munich.png", "State=Bought, Type=Munich.png"))
-    boardArr.append(Property(WIN, 1, 7, "Dortmund", "bottom", "State=Empty, Type=Dortmund.png", "State=Bought, Type=Dortmund.png"))
+    boardArr.append(Special(WIN, 7, 7, "Start" ,"Type=Start.png", 0))
+    boardArr.append(Property(WIN, 6, 7, "Lodz", "bottom", "State=Empty, Type=Lodz.png", "State=Bought, Type=Lodz.png", 1))
+    boardArr.append(Property(WIN, 5, 7, "Cracow", "bottom", "State=Empty, Type=Cracow.png", "State=Bought, Type=Cracow.png", 2))
+    boardArr.append(Property(WIN, 4, 7, "Warsaw", "bottom", "State=Empty, Type=Warsaw.png", "State=Bought, Type=Warsaw.png", 3))
+    boardArr.append(Property(WIN, 3, 7, "Berlin", "bottom", "State=Empty, Type=Berlin.png", "State=Bought, Type=Berlin.png", 4))
+    boardArr.append(Property(WIN, 2, 7, "Munich", "bottom", "State=Empty, Type=Munich.png", "State=Bought, Type=Munich.png", 5))
+    boardArr.append(Property(WIN, 1, 7, "Dortmund", "bottom", "State=Empty, Type=Dortmund.png", "State=Bought, Type=Dortmund.png", 6))
     
     # left wall
-    boardArr.append(Special(WIN, 0, 7, "Jail" ,"Type=Jail.png"))
-    boardArr.append(Property(WIN, 0, 6, "Lyon", "left", "State=Empty, Type=Lyon.png", "State=Bought, Type=Lyon.png"))
-    boardArr.append(Property(WIN, 0, 5, "Marseille", "left", "State=Empty, Type=Marseille.png", "State=Bought, Type=Marseille.png"))
-    boardArr.append(Property(WIN, 0, 4, "Paris", "left", "State=Empty, Type=Paris.png", "State=Bought, Type=Paris.png"))
-    boardArr.append(Property(WIN, 0, 3, "Liverpool", "left", "State=Empty, Type=Liverpool.png", "State=Bought, Type=Liverpool.png"))
-    boardArr.append(Property(WIN, 0, 2, "Manchester", "left", "State=Empty, Type=Manchester.png", "State=Bought, Type=Manchester.png"))
-    boardArr.append(Property(WIN, 0, 1, "London", "left", "State=Empty, Type=London.png", "State=Bought, Type=London.png"))
+    boardArr.append(Special(WIN, 0, 7, "Jail" ,"Type=Jail.png", 7))
+    boardArr.append(Property(WIN, 0, 6, "Lyon", "left", "State=Empty, Type=Lyon.png", "State=Bought, Type=Lyon.png", 8))
+    boardArr.append(Property(WIN, 0, 5, "Marseille", "left", "State=Empty, Type=Marseille.png", "State=Bought, Type=Marseille.png", 9))
+    boardArr.append(Property(WIN, 0, 4, "Paris", "left", "State=Empty, Type=Paris.png", "State=Bought, Type=Paris.png", 10))
+    boardArr.append(Property(WIN, 0, 3, "Liverpool", "left", "State=Empty, Type=Liverpool.png", "State=Bought, Type=Liverpool.png", 11))
+    boardArr.append(Property(WIN, 0, 2, "Manchester", "left", "State=Empty, Type=Manchester.png", "State=Bought, Type=Manchester.png", 12))
+    boardArr.append(Property(WIN, 0, 1, "London", "left", "State=Empty, Type=London.png", "State=Bought, Type=London.png", 13))
     
     # top wall
-    boardArr.append(Special(WIN, 0, 0, "Parking" ,"Type=Parking.png"))
-    boardArr.append(Property(WIN, 1, 0, "Mediolan", "top", "State=Empty, Type=Mediolan.png", "State=Bought, Type=Mediolan.png"))
-    boardArr.append(Property(WIN, 2, 0, "Venice", "top", "State=Empty, Type=Venice.png", "State=Bought, Type=Venice.png"))
-    boardArr.append(Property(WIN, 3, 0, "Rome", "top", "State=Empty, Type=Rome.png", "State=Bought, Type=Rome.png"))
-    boardArr.append(Property(WIN, 4, 0, "Lisbon", "top", "State=Empty, Type=Lisbon.png", "State=Bought, Type=Lisbon.png"))
-    boardArr.append(Property(WIN, 5, 0, "Porto", "top", "State=Empty, Type=Porto.png", "State=Bought, Type=Porto.png"))
-    boardArr.append(Property(WIN, 6, 0, "Braga", "top", "State=Empty, Type=Braga.png", "State=Bought, Type=Braga.png"))
+    boardArr.append(Special(WIN, 0, 0, "Parking" ,"Type=Parking.png", 14))
+    boardArr.append(Property(WIN, 1, 0, "Mediolan", "top", "State=Empty, Type=Mediolan.png", "State=Bought, Type=Mediolan.png", 15))
+    boardArr.append(Property(WIN, 2, 0, "Venice", "top", "State=Empty, Type=Venice.png", "State=Bought, Type=Venice.png", 16))
+    boardArr.append(Property(WIN, 3, 0, "Rome", "top", "State=Empty, Type=Rome.png", "State=Bought, Type=Rome.png", 17))
+    boardArr.append(Property(WIN, 4, 0, "Lisbon", "top", "State=Empty, Type=Lisbon.png", "State=Bought, Type=Lisbon.png", 18))
+    boardArr.append(Property(WIN, 5, 0, "Porto", "top", "State=Empty, Type=Porto.png", "State=Bought, Type=Porto.png", 19))
+    boardArr.append(Property(WIN, 6, 0, "Braga", "top", "State=Empty, Type=Braga.png", "State=Bought, Type=Braga.png", 20))
 
     # right wall
-    boardArr.append(Special(WIN, 7, 0, "GoToJail" ,"Type=Gotojail.png"))
-    boardArr.append(Property(WIN, 7, 1, "Helsinki", "right", "State=Empty, Type=Helsinki.png", "State=Bought, Type=Helsinki.png"))
-    boardArr.append(Property(WIN, 7, 2, "Stockholm", "right", "State=Empty, Type=Stockholm.png", "State=Bought, Type=Stockholm.png"))
-    boardArr.append(Property(WIN, 7, 3, "Oslo", "right", "State=Empty, Type=Oslo.png", "State=Bought, Type=Oslo.png"))
-    boardArr.append(Property(WIN, 7, 4, "Sevilla", "right", "State=Empty, Type=Sevilla.png", "State=Bought, Type=Sevilla.png"))
-    boardArr.append(Property(WIN, 7, 5, "Madrid", "right", "State=Empty, Type=Madrid.png", "State=Bought, Type=Madrid.png"))
-    boardArr.append(Property(WIN, 7, 6, "Barcelona", "right", "State=Empty, Type=Barcelona.png", "State=Bought, Type=Barcelona.png"))
+    boardArr.append(Special(WIN, 7, 0, "GoToJail" ,"Type=Gotojail.png", 21))
+    boardArr.append(Property(WIN, 7, 1, "Helsinki", "right", "State=Empty, Type=Helsinki.png", "State=Bought, Type=Helsinki.png", 22))
+    boardArr.append(Property(WIN, 7, 2, "Stockholm", "right", "State=Empty, Type=Stockholm.png", "State=Bought, Type=Stockholm.png", 23))
+    boardArr.append(Property(WIN, 7, 3, "Oslo", "right", "State=Empty, Type=Oslo.png", "State=Bought, Type=Oslo.png", 24))
+    boardArr.append(Property(WIN, 7, 4, "Sevilla", "right", "State=Empty, Type=Sevilla.png", "State=Bought, Type=Sevilla.png", 25))
+    boardArr.append(Property(WIN, 7, 5, "Madrid", "right", "State=Empty, Type=Madrid.png", "State=Bought, Type=Madrid.png", 26))
+    boardArr.append(Property(WIN, 7, 6, "Barcelona", "right", "State=Empty, Type=Barcelona.png", "State=Bought, Type=Barcelona.png", 27))
     
     return boardArr
 
@@ -90,12 +96,16 @@ def tossDice():
 
 def handleMouseClick(mousePos):
     mouseX, mouseY = mousePos
-    
+
     if ROLL_DICE_BUTTON_POSX <= mouseX <= ROLL_DICE_BUTTON_POSX + BUTTON_WIDTH and ROLL_DICE_BUTTON_POSY <= mouseY <= ROLL_DICE_BUTTON_POSY + BUTTON_HEIGHT:
         return 1
     elif NEXT_TURN_BUTTON_POSX <= mouseX <= NEXT_TURN_BUTTON_POSX + BUTTON_WIDTH and NEXT_TURN_BUTTON_POSY <= mouseY <= NEXT_TURN_BUTTON_POSY + BUTTON_HEIGHT:
         return 2
+
     return 0
+
+
+
 
 
 def drawPlayerTextMoney(WIN, players, turn):
@@ -135,12 +145,27 @@ def drawPlayerTextMoney(WIN, players, turn):
         WIN.blit(labelPlayerText, (xPos, yPos))
         WIN.blit(labelPlayerMoney, (xPos, yPos + textHeight + 10))
 
+def drawPlayers(WIN, players, board):
+    for player in players.values():
+        tileId = player.getCurrentTile()  # Pobieramy ID pola na planszy
+        tile = next((tile for tile in board if tile.id == tileId), None)  # Wyszukujemy pole o podanym ID
+        if tile:
+            xPos, yPos = int(tile.xPos * TILE_SIZE + TILE_SIZE / 2), int(tile.yPos * TILE_SIZE + TILE_SIZE / 2)
+            color = player.getTokenColor()
+            player_image = PLAYER_IMAGES[color]
+            player_rect = player_image.get_rect(center=(xPos, yPos))
+            WIN.blit(player_image, player_rect)
+
+
+
 
 def draw(WIN, board, players, diceGraphs, RollDiceButtonGraphic, NextTurnButtonGraphic, moves, turn):
     WIN.fill((0, 0, 0))
 
     for tile in board:
         tile.draw()
+
+    drawPlayers(WIN, players, board)  # Dodanie pionków graczy
     
     WIN.blit(diceGraphs[moves], (DICE_POS, DICE_POS))
     WIN.blit(RollDiceButtonGraphic, (ROLL_DICE_BUTTON_POSX, ROLL_DICE_BUTTON_POSY))
@@ -169,24 +194,29 @@ def main():
 
     moves = 1
     while True:
-        event = pygame.event.wait()
-        if event.type == pygame.QUIT:
-            break
+            event = pygame.event.wait()
+            if event.type == pygame.QUIT:
+                break
 
-        draw(WIN, board, players, diceGraphs, RollDiceButtonGraphic, NextTurnButtonGraphic, moves, currentTurn)
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            action = handleMouseClick(pygame.mouse.get_pos())
-            if action == 1 and not players[currentTurn].hasRolled: # roll the dice button clicked
-                players[currentTurn].hasRolled = True
-                moves = tossDice()
-            elif action == 2: # next turn button clicked
-                players[currentTurn].hasRolled = False
-                currentTurn = turns.pop(0)
-                turns.append(currentTurn)
-        
-        pygame.display.update()
-        clock.tick(60)
-
+            draw(WIN, board, players, diceGraphs, RollDiceButtonGraphic, NextTurnButtonGraphic, moves, currentTurn)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                action = handleMouseClick(pygame.mouse.get_pos())
+                if action == 1 and not players[currentTurn].hasRolled: # roll the dice button clicked
+                    players[currentTurn].hasRolled = True
+                    moves = tossDice()
+                    currentPlayer = players[currentTurn]
+                    currentTile = currentPlayer.getCurrentTile()
+                    newTile = (currentTile + moves) % len(board)
+                    if currentTile + moves > 27:
+                        currentPlayer.addMoney(200)
+                    currentPlayer.setCurrentTile(newTile)
+                elif action == 2: # next turn button clicked
+                    players[currentTurn].hasRolled = False
+                    currentTurn = turns.pop(0)
+                    turns.append(currentTurn)
+            
+            pygame.display.update()
+            clock.tick(60)
 
 if __name__ == "__main__":
     main()
