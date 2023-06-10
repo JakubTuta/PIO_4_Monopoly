@@ -93,7 +93,9 @@ def tossDice():
     
     return moves
 
-
+def movePlayerToTile(player, tileId):
+    player.setCurrentTile(tileId)
+    
 def handleMouseClick(mousePos):
     mouseX, mouseY = mousePos
 
@@ -233,6 +235,10 @@ def main():
                     if currentTile + moves > 27:
                         currentPlayer.addMoney(200)
                     currentPlayer.setCurrentTile(newTile)
+                    
+                    # Sprawdzanie, czy gracz jest na polu o ID równym 21
+                    if newTile == 21:
+                        movePlayerToTile(currentPlayer, 7)
                 elif action == 2: # next turn button clicked
                     players[currentTurn].hasRolled = False
                     currentTurn = turns.pop(0)
