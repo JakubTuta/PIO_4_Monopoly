@@ -159,11 +159,8 @@ def drawPlayers(WIN, players, board):
             player_image = PLAYER_IMAGES[color]
             player_rect = player_image.get_rect()
 
-            if xPos == 0:
+            if tile.xPos == 0:
                 # Jeśli pionek znajduje się na polu ściany lewej, ustaw pozycję pionka względem prawego górnego narożnika pola
-                player_rect.topright = (xPos + TILE_SIZE, yPos)
-            elif xPos == 7:
-                # Jeśli pionek znajduje się na polu ściany prawej, ustaw pozycję pionka względem prawego górnego narożnika pola
                 player_rect.topright = (xPos + TILE_SIZE, yPos)
             else:
                 player_rect.topleft = (xPos, yPos)
@@ -171,7 +168,7 @@ def drawPlayers(WIN, players, board):
             if (xPos, yPos) in occupied_positions:
                 # Jeśli na danej pozycji jest już pionek, przesuń nowy pionek na odpowiednią odległość
                 offset = occupied_positions[(xPos, yPos)] * TILE_SIZE / 4
-                if xPos != 0 and xPos != 7:
+                if tile.xPos != 0 and tile.xPos != 7:
                     player_rect.move_ip(offset, 0)
                 else:
                     player_rect.move_ip(0, offset)
