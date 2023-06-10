@@ -11,19 +11,47 @@ DICE_POS = WINDOW_SIZE / 2 - DICE_SIZE / 2
 BUTTON_WIDTH = 100
 BUTTON_HEIGHT = 45
 
-ROLL_DICE_BUTTON_POSX = WINDOW_SIZE / 2 - BUTTON_WIDTH / 2
-ROLL_DICE_BUTTON_POSY = WINDOW_SIZE / 2 - DICE_SIZE / 2 + DICE_SIZE + 10
-
-NEXT_TURN_BUTTON_POSX = ROLL_DICE_BUTTON_POSX
-NEXT_TURN_BUTTON_POSY = ROLL_DICE_BUTTON_POSY + BUTTON_HEIGHT + 5
+EVENT_WINDOW_WIDTH = 350
+EVENT_WINDOW_HEIGHT = 130
+EVENT_WINDOW_X = WINDOW_SIZE / 2 - EVENT_WINDOW_WIDTH / 2
+EVENT_WINDOW_Y = TILE_SIZE + 80
 
 COLORS = {
     "BLACK": (0, 0, 0),
     "WHITE": (255, 255, 255),
+    "GRAY": (60, 60, 60),
+    "DARK_GRAY": (45, 45, 45),
     "red": (255, 0, 0),
     "green": (0, 255, 0),
     "blue": (0, 0, 255),
     "purple": (238, 130, 238)
+}
+
+BUTTONS = {
+    "RollDice": (WINDOW_SIZE / 2 - BUTTON_WIDTH / 2, WINDOW_SIZE / 2 - DICE_SIZE / 2 + DICE_SIZE + 10, BUTTON_WIDTH, BUTTON_HEIGHT),
+    "NextTurn": (WINDOW_SIZE / 2 - BUTTON_WIDTH / 2, WINDOW_SIZE / 2 - DICE_SIZE / 2 + DICE_SIZE + BUTTON_HEIGHT + 10, BUTTON_WIDTH, BUTTON_HEIGHT),
+    "Event": {
+        "Window": (EVENT_WINDOW_X, EVENT_WINDOW_Y, EVENT_WINDOW_WIDTH, EVENT_WINDOW_HEIGHT),
+        "Yes": (EVENT_WINDOW_X + 15, EVENT_WINDOW_Y + EVENT_WINDOW_HEIGHT - BUTTON_HEIGHT - 15, BUTTON_WIDTH, BUTTON_HEIGHT),
+        "No": (EVENT_WINDOW_X + EVENT_WINDOW_WIDTH - BUTTON_WIDTH - 15, EVENT_WINDOW_Y + EVENT_WINDOW_HEIGHT - BUTTON_HEIGHT - 15, BUTTON_WIDTH, BUTTON_HEIGHT)
+    }
+}
+
+EVENTS = {
+    "PLAYER_ON_TILE": {
+        "State": False,
+        "Text": ("Would you like to buy this tile?", "Yes", "No")
+    },
+    "PLAYER_BROKE": {
+        "State": False,
+        "Text": ("You don't have enough money.", "Sell", "Bankrupt"),
+        "Position": (EVENT_WINDOW_X + 15, EVENT_WINDOW_Y + EVENT_WINDOW_HEIGHT - BUTTON_WIDTH - 15, BUTTON_WIDTH, BUTTON_HEIGHT)
+    },
+    "PLAYER_WON": {
+        "State": False,
+        "Text": ("Congratulations, you have won!", "Exit", "Exit"),
+        "Position": (EVENT_WINDOW_X + 15, EVENT_WINDOW_Y + EVENT_WINDOW_HEIGHT - BUTTON_WIDTH - 15, BUTTON_WIDTH, BUTTON_HEIGHT)
+    }
 }
 
 
@@ -91,20 +119,21 @@ def tossDice():
 def handleMouseClick(mousePos):
     mouseX, mouseY = mousePos
     
-    if ROLL_DICE_BUTTON_POSX <= mouseX <= ROLL_DICE_BUTTON_POSX + BUTTON_WIDTH and ROLL_DICE_BUTTON_POSY <= mouseY <= ROLL_DICE_BUTTON_POSY + BUTTON_HEIGHT:
+    if BUTTONS["RollDice"][0] <= mouseX <= BUTTONS["RollDice"][0] + BUTTONS["RollDice"][2] and BUTTONS["RollDice"][1] <= mouseY <= BUTTONS["RollDice"][1] + BUTTONS["RollDice"][3]:
         return 1
-    elif NEXT_TURN_BUTTON_POSX <= mouseX <= NEXT_TURN_BUTTON_POSX + BUTTON_WIDTH and NEXT_TURN_BUTTON_POSY <= mouseY <= NEXT_TURN_BUTTON_POSY + BUTTON_HEIGHT:
+    elif BUTTONS["NextTurn"][0] <= mouseX <= BUTTONS["NextTurn"][0] + BUTTONS["NextTurn"][2] and BUTTONS["NextTurn"][1] <= mouseY <= BUTTONS["NextTurn"][1] + BUTTONS["NextTurn"][3]:
         return 2
+    elif BUTTONS["Event"]["Yes"][0] <= mouseX <= BUTTONS["Event"]["Yes"][0] + BUTTONS["Event"]["Yes"][2] and BUTTONS["Event"]["Yes"][1] <= mouseY <= BUTTONS["Event"]["Yes"][1] + BUTTONS["Event"]["Yes"][3]:
+        return 3
+    elif BUTTONS["Event"]["No"][0] <= mouseX <= BUTTONS["Event"]["No"][0] + BUTTONS["Event"]["No"][2] and BUTTONS["Event"]["No"][1] <= mouseY <= BUTTONS["Event"]["No"][1] + BUTTONS["Event"]["No"][3]:
+        return 4
     return 0
 
 
-def drawPlayerTextMoney(WIN, players, turn):
-    font = pygame.font.SysFont(None, 30)
-    turnFont = pygame.font.SysFont(None, 40, bold=True)
-    
+def drawPlayerTextMoney(WIN, font, titleFont, players, turn):
     turnText = f"{turn}'s turn"
-    labelTurnText = turnFont.render(turnText, True, COLORS[turn])
-    textWidth, textHeight = turnFont.size(turnText)
+    labelTurnText = titleFont.render(turnText, True, COLORS[turn])
+    textWidth, textHeight = titleFont.size(turnText)
     WIN.blit(labelTurnText, ((WINDOW_SIZE / 2 - textWidth / 2), (DICE_POS - textHeight - 10)))
     
     for player in players.values():
@@ -136,17 +165,50 @@ def drawPlayerTextMoney(WIN, players, turn):
         WIN.blit(labelPlayerMoney, (xPos, yPos + textHeight + 10))
 
 
-def draw(WIN, board, players, diceGraphs, RollDiceButtonGraphic, NextTurnButtonGraphic, moves, turn):
-    WIN.fill((0, 0, 0))
+def drawEvent(WIN, font, responseFont, eventText, eventYes, eventNo):
+    pygame.draw.rect(WIN, COLORS["GRAY"], BUTTONS["Event"]["Window"])
+    pygame.draw.rect(WIN, COLORS["DARK_GRAY"], BUTTONS["Event"]["Yes"])
+    pygame.draw.rect(WIN, COLORS["DARK_GRAY"], BUTTONS["Event"]["No"])
+    
+    labelEventText = font.render(eventText, True, COLORS["WHITE"])
+    labelEventYes = responseFont.render(eventYes, True, COLORS["WHITE"])
+    labelEventNo = responseFont.render(eventNo, True, COLORS["WHITE"])
+    
+    width = font.size(f"{eventText}")[0]
+    WIN.blit(labelEventText, (WINDOW_SIZE / 2 - width / 2, EVENT_WINDOW_Y + 15))
+    
+    width, height = responseFont.size(f"{eventYes}")
+    WIN.blit(labelEventYes, (EVENT_WINDOW_X + 15 + BUTTON_WIDTH / 2 - width / 2, EVENT_WINDOW_Y + EVENT_WINDOW_HEIGHT - 15 - BUTTON_HEIGHT / 2 - height / 2))
+    
+    width, height = responseFont.size(f"{eventNo}")
+    WIN.blit(labelEventNo, (EVENT_WINDOW_X + EVENT_WINDOW_WIDTH - 15 - BUTTON_WIDTH / 2 - width / 2, EVENT_WINDOW_Y + EVENT_WINDOW_HEIGHT - 15 - BUTTON_HEIGHT / 2 - height / 2))
 
+
+def draw(WIN, board, players, diceGraphs, RollDiceButtonGraphic, NextTurnButtonGraphic, moves, turn):
+    font = pygame.font.SysFont(None, 30)
+    titleFont = pygame.font.SysFont(None, 40, bold=True)
+    responseFont = pygame.font.SysFont(None, 25, italic=True)
+    WIN.fill(COLORS["BLACK"])
+    
     for tile in board:
         tile.draw()
     
     WIN.blit(diceGraphs[moves], (DICE_POS, DICE_POS))
-    WIN.blit(RollDiceButtonGraphic, (ROLL_DICE_BUTTON_POSX, ROLL_DICE_BUTTON_POSY))
-    WIN.blit(NextTurnButtonGraphic, (NEXT_TURN_BUTTON_POSX, NEXT_TURN_BUTTON_POSY))
+    WIN.blit(RollDiceButtonGraphic, (BUTTONS["RollDice"][0], BUTTONS["RollDice"][1]))
+    WIN.blit(NextTurnButtonGraphic, (BUTTONS["NextTurn"][0], BUTTONS["NextTurn"][1]))
     
-    drawPlayerTextMoney(WIN, players, turn)
+    drawPlayerTextMoney(WIN, font, titleFont, players, turn)
+    
+    for event in EVENTS.values():
+        if event["State"]:
+            drawEvent(WIN, font, responseFont, *event["Text"])
+            break
+
+
+def nextTurn(turns):
+    currentTurn = turns.pop(0)
+    turns.append(currentTurn)
+    return currentTurn
 
 
 def main(): 
@@ -154,38 +216,43 @@ def main():
     WIN = pygame.display.set_mode((WINDOW_SIZE, WINDOW_SIZE))
     pygame.display.set_caption("Monopoly")
     
-    diceGraphs = {}
+    diceGraphics = {}
     for i in range(1, 7):
-        diceGraphs[i] = pygame.Surface.convert_alpha(pygame.transform.scale(pygame.image.load(os.path.join(f"assets/State=Dice_{i}.png")), (DICE_SIZE, DICE_SIZE)))
+        diceGraphics[i] = pygame.Surface.convert_alpha(pygame.transform.scale(pygame.image.load(os.path.join(f"assets/State=Dice_{i}.png")), (DICE_SIZE, DICE_SIZE)))
     RollDiceButtonGraphic = pygame.Surface.convert_alpha(pygame.transform.scale(pygame.image.load(os.path.join(f"assets/State=Dice_button.png")), (BUTTON_WIDTH, BUTTON_HEIGHT)))
     NextTurnButtonGraphic = pygame.Surface.convert_alpha(pygame.transform.scale(pygame.image.load(os.path.join(f"assets/Next_turn_button.png")), (BUTTON_WIDTH, BUTTON_HEIGHT)))
     
     board = createBoard(WIN)
     players, turns = createPlayersArray(4)
-    currentTurn = turns.pop(0)
-    turns.append(currentTurn)
+    currentTurn = nextTurn(turns)
     
-    clock = pygame.time.Clock()
-
     moves = 1
     while True:
         event = pygame.event.wait()
         if event.type == pygame.QUIT:
             break
 
-        draw(WIN, board, players, diceGraphs, RollDiceButtonGraphic, NextTurnButtonGraphic, moves, currentTurn)
+        draw(WIN, board, players, diceGraphics, RollDiceButtonGraphic, NextTurnButtonGraphic, moves, currentTurn)
         if event.type == pygame.MOUSEBUTTONDOWN:
             action = handleMouseClick(pygame.mouse.get_pos())
-            if action == 1 and not players[currentTurn].hasRolled: # roll the dice button clicked
-                players[currentTurn].hasRolled = True
-                moves = tossDice()
-            elif action == 2: # next turn button clicked
-                players[currentTurn].hasRolled = False
-                currentTurn = turns.pop(0)
-                turns.append(currentTurn)
+            
+            for event in EVENTS.values():
+                if event["State"]:
+                    if action == 3:                                         # "YES" button hit
+                        event["State"] = False
+                    elif action == 4:                                       # "NO" button hit
+                        event["State"] = False
+                    break
+            else:                                                           # executes if loop is not broken
+                if action == 1 and not players[currentTurn].hasRolled:      # roll the dice button clicked
+                    players[currentTurn].hasRolled = True
+                    moves = tossDice()
+                elif action == 2: # next turn button clicked
+                    players[currentTurn].hasRolled = False
+                    currentTurn = turns.pop(0)
+                    turns.append(currentTurn)
         
         pygame.display.update()
-        clock.tick(60)
 
 
 if __name__ == "__main__":
