@@ -207,6 +207,8 @@ def main():
                     currentPlayer = players[currentTurn]
                     currentTile = currentPlayer.getCurrentTile()
                     newTile = (currentTile + moves) % len(board)
+                    if currentTile + moves > 28:
+                        currentPlayer.addMoney(200)
                     currentPlayer.setCurrentTile(newTile)
                 elif action == 2: # next turn button clicked
                     players[currentTurn].hasRolled = False

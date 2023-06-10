@@ -16,6 +16,9 @@ class Player:
     def getMoneyAvailable(self):
         return self.__moneyAvailable
     
+    def addMoney(self, amount):
+        self.__moneyAvailable += amount
+
     def getCurrentTile(self):
         return self._currentTile
 
