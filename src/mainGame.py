@@ -156,18 +156,29 @@ def drawPlayers(WIN, players, board):
             color = player.getTokenColor()
             player_image = PLAYER_IMAGES[color]
             player_rect = player_image.get_rect()
-            player_rect.topleft = (xPos, yPos)
-            player_rect.topleft = (xPos, yPos)
+
+            if xPos == 0:
+                # Jeśli pionek znajduje się na polu ściany lewej, ustaw pozycję pionka względem prawego górnego narożnika pola
+                player_rect.topright = (xPos + TILE_SIZE, yPos)
+            elif xPos == 7:
+                # Jeśli pionek znajduje się na polu ściany prawej, ustaw pozycję pionka względem prawego górnego narożnika pola
+                player_rect.topright = (xPos + TILE_SIZE, yPos)
+            else:
+                player_rect.topleft = (xPos, yPos)
 
             if (xPos, yPos) in occupied_positions:
                 # Jeśli na danej pozycji jest już pionek, przesuń nowy pionek na odpowiednią odległość
                 offset = occupied_positions[(xPos, yPos)] * TILE_SIZE / 4
-                player_rect.move_ip(offset, 0)
+                if xPos != 0 and xPos != 7:
+                    player_rect.move_ip(offset, 0)
+                else:
+                    player_rect.move_ip(0, offset)
                 occupied_positions[(xPos, yPos)] += 1
             else:
                 occupied_positions[(xPos, yPos)] = 1
 
             WIN.blit(player_image, player_rect)
+
 
 
 
