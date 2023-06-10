@@ -146,16 +146,28 @@ def drawPlayerTextMoney(WIN, players, turn):
         WIN.blit(labelPlayerMoney, (xPos, yPos + textHeight + 10))
 
 def drawPlayers(WIN, players, board):
+    occupied_positions = {}  # Słownik do przechowywania pozycji, na których znajdują się pionki
+
     for player in players.values():
-        tileId = player.getCurrentTile()  # Pobieramy ID pola na planszy
-        tile = next((tile for tile in board if tile.id == tileId), None)  # Wyszukujemy pole o podanym ID
+        tileId = player.getCurrentTile()
+        tile = next((tile for tile in board if tile.id == tileId), None)
         if tile:
-            xPos, yPos = int(tile.xPos * TILE_SIZE + TILE_SIZE / 2), int(tile.yPos * TILE_SIZE + TILE_SIZE / 2)
+            xPos, yPos = int(tile.xPos * TILE_SIZE), int(tile.yPos * TILE_SIZE)
             color = player.getTokenColor()
             player_image = PLAYER_IMAGES[color]
-            player_rect = player_image.get_rect(center=(xPos, yPos))
-            WIN.blit(player_image, player_rect)
+            player_rect = player_image.get_rect()
+            player_rect.topleft = (xPos, yPos)
+            player_rect.topleft = (xPos, yPos)
 
+            if (xPos, yPos) in occupied_positions:
+                # Jeśli na danej pozycji jest już pionek, przesuń nowy pionek na odpowiednią odległość
+                offset = occupied_positions[(xPos, yPos)] * TILE_SIZE / 4
+                player_rect.move_ip(offset, 0)
+                occupied_positions[(xPos, yPos)] += 1
+            else:
+                occupied_positions[(xPos, yPos)] = 1
+
+            WIN.blit(player_image, player_rect)
 
 
 
