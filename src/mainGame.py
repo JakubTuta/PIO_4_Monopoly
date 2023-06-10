@@ -231,7 +231,7 @@ def main():
                     newTile = (currentTile + moves) % len(board)
                     if currentTile + moves > 27:
                         currentPlayer.addMoney(200)
-                    currentPlayer.setCurrentTile(newTile)
+                    movePlayerToTile(currentPlayer, newTile)
                     
                     # Sprawdzanie, czy gracz jest na polu o ID równym 21
                     if newTile == 21:
