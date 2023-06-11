@@ -114,7 +114,7 @@ def askToBuyProperty(player, tile):
                 tile.isBought = True
                 tile.owner = player
                 player.subMoney(tile.price)
-        if player != tile.owner:
+        if player != tile.owner and tile.owner != None:
             tile.owner.addMoney(int(tile.price*0.3))
             player.subMoney(int(tile.price*0.3))
 
