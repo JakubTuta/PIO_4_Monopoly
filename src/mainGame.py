@@ -106,10 +106,28 @@ def handleMouseClick(mousePos):
 
     return 0
 
-def askToBuyProperty(player, tile):
+def askToBuyProperty(player, tile, WIN):
     if isinstance(tile, Property):
         if tile.isBought == False:
-            answer = input(f"Czy chcesz kupić posiadłość {tile.name}? (tak/nie): ")
+            # Render the text
+            font = pygame.font.SysFont(None, 30)
+            text = font.render(f"Czy chcesz kupić posiadłość {tile.name}? t-tak, n-nie", True, COLORS["WHITE"])
+            # Get the rectangle for the text surface
+            text_rect = text.get_rect(center=(WINDOW_SIZE // 2, WINDOW_SIZE // 2 - TILE_SIZE))
+
+            answer = None
+            while answer is None:
+                for event in pygame.event.get():
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_t:
+                            answer = "tak"
+                        elif event.key == pygame.K_n:
+                            answer = "nie"
+
+                # Draw the text on the screen
+                WIN.blit(text, text_rect)
+                pygame.display.flip()
+
             if answer.lower() == "tak":
                 tile.isBought = True
                 tile.owner = player
@@ -243,7 +261,7 @@ def main():
                     if currentTile + moves > 27:
                         currentPlayer.addMoney(200)
                     movePlayerToTile(currentPlayer, newTile)
-                    askToBuyProperty(currentPlayer, board[newTile])  # dodane wywołanie funkcji askToBuyProperty
+                    askToBuyProperty(currentPlayer, board[newTile], WIN)  # dodane wywołanie funkcji askToBuyProperty
                     # Sprawdzanie, czy gracz jest na polu o ID równym 21
                     if newTile == 21:
                         movePlayerToTile(currentPlayer, 7)
