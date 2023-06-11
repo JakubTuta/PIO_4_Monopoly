@@ -3,11 +3,13 @@ from Player import Player
 from Tile import Tile, Property, Special, WINDOW_SIZE, TILE_SIZE
 import pygame                                                   # pip install pygame / pip install pygame --pre
 import os
+import math
+
 PLAYER_IMAGES = {
-    "red": pygame.image.load(os.path.join("assets", "Type=red.png")),
-    "green": pygame.image.load(os.path.join("assets", "Type=green.png")),
-    "blue": pygame.image.load(os.path.join("assets", "Type=blue.png")),
-    "yellow": pygame.image.load(os.path.join("assets", "Type=yellow.png"))
+    "Red": pygame.image.load(os.path.join("assets", "Type=red.png")),
+    "Green": pygame.image.load(os.path.join("assets", "Type=green.png")),
+    "Blue": pygame.image.load(os.path.join("assets", "Type=blue.png")),
+    "Yellow": pygame.image.load(os.path.join("assets", "Type=yellow.png"))
 }
 
 DICE_SIZE = 60
@@ -25,18 +27,17 @@ NEXT_TURN_BUTTON_POSY = ROLL_DICE_BUTTON_POSY + BUTTON_HEIGHT + 5
 COLORS = {
     "BLACK": (0, 0, 0),
     "WHITE": (255, 255, 255),
-    "red": (255, 0, 0),
-    "green": (0, 255, 0),
-    "blue": (0, 0, 255),
-    "yellow": (255, 214, 0)
+    "Red": (255, 0, 0),
+    "Green": (0, 255, 0),
+    "Blue": (0, 0, 255),
+    "Yellow": (255, 214, 0)
 }
-
 
 def createPlayersArray(amountOfPlayers):
     if amountOfPlayers < 2 or amountOfPlayers > 4:
         return
     
-    colors = ["red", "green", "blue", "yellow"]
+    colors = ["Red", "Green", "Blue", "Yellow"]
     shuffle(colors)
     players = {}
     for color in colors:
@@ -133,11 +134,8 @@ def askToBuyProperty(player, tile, WIN):
                 tile.owner = player
                 player.subMoney(tile.price)
         if player != tile.owner and tile.owner != None:
-            tile.owner.addMoney(int(tile.price*0.3))
-            player.subMoney(int(tile.price*0.3))
-
-
-
+            tile.owner.addMoney(math.ceil(tile.price/100)*10) #=ROUNDUP((D5*0,1)/100+0,01;1)*100
+            player.subMoney(math.ceil(tile.price/100)*10)
 
 def drawPlayerTextMoney(WIN, players, turn):
     font = pygame.font.SysFont(None, 30)
@@ -160,13 +158,13 @@ def drawPlayerTextMoney(WIN, players, turn):
         
         textWidth, textHeight = font.size(playerText)
         
-        if color == "red":
+        if color == "Red":
             xPos = (WINDOW_SIZE / 2) - (textWidth / 2)
             yPos = WINDOW_SIZE - TILE_SIZE - 60
-        elif color == "green":
+        elif color == "Green":
             xPos = TILE_SIZE + 20
             yPos = (WINDOW_SIZE / 2) - textHeight
-        elif color == "blue":
+        elif color == "Blue":
             xPos = (WINDOW_SIZE / 2) - (textWidth / 2)
             yPos = TILE_SIZE + 20
         else:
