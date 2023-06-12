@@ -43,11 +43,6 @@ BUTTONS = {
     }
 }
 
-EVENT_WINDOW_WIDTH = 350
-EVENT_WINDOW_HEIGHT = 130
-EVENT_WINDOW_X = WINDOW_SIZE / 2 - EVENT_WINDOW_WIDTH / 2
-EVENT_WINDOW_Y = TILE_SIZE + 80
-
 def createPlayersArray(amountOfPlayers):
     if amountOfPlayers < 2 or amountOfPlayers > 4:
         return
@@ -154,10 +149,10 @@ def askToBuyProperty(player, tile, WIN):
             tile.owner.addMoney(math.ceil(tile.price/100)*10) #=ROUNDUP((D5*0,1)/100+0,01;1)*100
             player.subMoney(math.ceil(tile.price/100)*10)
 
-def drawPlayerTextMoney(WIN, players, turn):
-    font = pygame.font.SysFont(None, 30)
-    turnFont = pygame.font.SysFont(None, 40, bold=True)
-    
+#def drawPlayerTextMoney(WIN, players, turn):
+#    font = pygame.font.SysFont(None, 30)
+#    turnFont = pygame.font.SysFont(None, 40, bold=True)
+
 def drawPlayerTextMoney(WIN, font, titleFont, players, turn):
     turnText = f"{turn}'s turn"
     labelTurnText = titleFont.render(turnText, True, COLORS[turn])
