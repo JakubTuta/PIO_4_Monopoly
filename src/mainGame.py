@@ -33,6 +33,21 @@ COLORS = {
     "Yellow": (255, 214, 0)
 }
 
+BUTTONS = {
+    "RollDice": (WINDOW_SIZE / 2 - BUTTON_WIDTH / 2, WINDOW_SIZE / 2 - DICE_SIZE / 2 + DICE_SIZE + 10, BUTTON_WIDTH, BUTTON_HEIGHT),
+    "NextTurn": (WINDOW_SIZE / 2 - BUTTON_WIDTH / 2, WINDOW_SIZE / 2 - DICE_SIZE / 2 + DICE_SIZE + BUTTON_HEIGHT + 10, BUTTON_WIDTH, BUTTON_HEIGHT),
+    "Event": {
+        "Window": (EVENT_WINDOW_X, EVENT_WINDOW_Y, EVENT_WINDOW_WIDTH, EVENT_WINDOW_HEIGHT),
+        "Yes": (EVENT_WINDOW_X + 15, EVENT_WINDOW_Y + EVENT_WINDOW_HEIGHT - BUTTON_HEIGHT - 15, BUTTON_WIDTH, BUTTON_HEIGHT),
+        "No": (EVENT_WINDOW_X + EVENT_WINDOW_WIDTH - BUTTON_WIDTH - 15, EVENT_WINDOW_Y + EVENT_WINDOW_HEIGHT - BUTTON_HEIGHT - 15, BUTTON_WIDTH, BUTTON_HEIGHT)
+    }
+}
+
+EVENT_WINDOW_WIDTH = 350
+EVENT_WINDOW_HEIGHT = 130
+EVENT_WINDOW_X = WINDOW_SIZE / 2 - EVENT_WINDOW_WIDTH / 2
+EVENT_WINDOW_Y = TILE_SIZE + 80
+
 def createPlayersArray(amountOfPlayers):
     if amountOfPlayers < 2 or amountOfPlayers > 4:
         return
@@ -276,31 +291,29 @@ def main():
     
     moves = 1
     while True:
-            event = pygame.event.wait()
-            if event.type == pygame.QUIT:
-                break
-
-            draw(WIN, board, players, diceGraphs, RollDiceButtonGraphic, NextTurnButtonGraphic, moves, currentTurn)
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                action = handleMouseClick(pygame.mouse.get_pos())
-                if action == 1 and not players[currentTurn].hasRolled: # roll the dice button clicked
-                    players[currentTurn].hasRolled = True
-                    moves = tossDice()
-                    currentPlayer = players[currentTurn]
-                    currentTile = currentPlayer.getCurrentTile()
-                    newTile = (currentTile + moves) % len(board)
-                    if currentTile + moves > 27:
-                        currentPlayer.addMoney(200)
-                    movePlayerToTile(currentPlayer, newTile)
-                    askToBuyProperty(currentPlayer, board[newTile], WIN)  # dodane wywołanie funkcji askToBuyProperty
-                    # Sprawdzanie, czy gracz jest na polu o ID równym 21
-                    if newTile == 21:
-                        movePlayerToTile(currentPlayer, 7)
-                elif action == 2: # next turn button clicked
-                    players[currentTurn].hasRolled = False
-                    currentTurn = turns.pop(0)
-                    turns.append(currentTurn)
-        
+        event = pygame.event.wait()
+        if event.type == pygame.QUIT:
+            break
+        draw(WIN, board, players, diceGraphs, RollDiceButtonGraphic, NextTurnButtonGraphic, moves, currentTurn)
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            action = handleMouseClick(pygame.mouse.get_pos())
+            if action == 1 and not players[currentTurn].hasRolled: # roll the dice button clicked
+                players[currentTurn].hasRolled = True
+                moves = tossDice()
+                currentPlayer = players[currentTurn]
+                currentTile = currentPlayer.getCurrentTile()
+                newTile = (currentTile + moves) % len(board)
+                if currentTile + moves > 27:
+                    currentPlayer.addMoney(200)
+                movePlayerToTile(currentPlayer, newTile)
+                askToBuyProperty(currentPlayer, board[newTile], WIN)  # dodane wywołanie funkcji askToBuyProperty
+                # Sprawdzanie, czy gracz jest na polu o ID równym 21
+                if newTile == 21:
+                    movePlayerToTile(currentPlayer, 7)
+            elif action == 2: # next turn button clicked
+                players[currentTurn].hasRolled = False
+                currentTurn = turns.pop(0)
+                turns.append(currentTurn)
         pygame.display.update()
 
 if __name__ == "__main__":
