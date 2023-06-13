@@ -6,26 +6,24 @@ WINDOW_SIZE = 800
 TILE_SIZE = WINDOW_SIZE / BOARD_SIZE
 
 class Tile:
-    def __init__(self, WIN, xPos, yPos, name, id, price):
+    def __init__(self, WIN, xPos, yPos, name, id):
         self.xPos = xPos
         self.yPos = yPos
         self.name = name
         self.WIN = WIN
         self.id = id
-        self.price = price
+        
 
 
 class Property(Tile):
-    def __init__(self, WIN, xPos, yPos, name, wall, notBoughtGraphic, boughtGraphic, id, price):
-        super().__init__(WIN, xPos, yPos, name, id, price)
+    def __init__(self, WIN, xPos, yPos, name, wall, notBoughtGraphic, boughtGraphic, id):
+        super().__init__(WIN, xPos, yPos, name, id)
         self.__tileWidth = 0
         self.__tileHeight = 0
         self.__notBoughtGraphic = None
         self.__boughtGraphic = None
         self.isBought = False
-        self.owner = None
         self.id = id
-        self.price = price
 
         if wall == "bottom" or wall == "top":
             self.__tileWidth = TILE_SIZE
@@ -51,13 +49,12 @@ class Property(Tile):
 
 
 class Special(Tile):
-    def __init__(self, WIN, xPos, yPos, name, graphic, id, price):
-        super().__init__(WIN, xPos, yPos, name, id, price)
+    def __init__(self, WIN, xPos, yPos, name, graphic, id):
+        super().__init__(WIN, xPos, yPos, name, id)
         self.__tileWidth = TILE_SIZE
         self.__tileHeight = TILE_SIZE
         self.__graphic = pygame.Surface.convert(pygame.transform.scale(pygame.image.load(os.path.join(f"assets/{graphic}")), (self.__tileWidth, self.__tileHeight)))
         self.id = id
-        self.price = price
 
     def draw(self):
         self.WIN.blit(self.__graphic, (self.xPos * self.__tileWidth, self.yPos * self.__tileHeight))
