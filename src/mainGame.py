@@ -42,6 +42,7 @@ BUTTONS = {
         "Yes": (EVENT_WINDOW_X + 15, EVENT_WINDOW_Y + EVENT_WINDOW_HEIGHT - BUTTON_HEIGHT - 15, BUTTON_WIDTH, BUTTON_HEIGHT),
         "No": (EVENT_WINDOW_X + EVENT_WINDOW_WIDTH - BUTTON_WIDTH - 15, EVENT_WINDOW_Y + EVENT_WINDOW_HEIGHT - BUTTON_HEIGHT - 15, BUTTON_WIDTH, BUTTON_HEIGHT)
     }
+
 }
 
 EVENTS = {
@@ -78,42 +79,42 @@ def createPlayersArray(amountOfPlayers):
 
 def createBoard(WIN):
     boardArr = []
-    
+
     # bottom wall
-    boardArr.append(Special(WIN, 7, 7, "Start" ,"Type=Start.png", 0, 0))
-    boardArr.append(Property(WIN, 6, 7, "Lodz", "bottom", "State=Empty, Type=Lodz.png", "State=Bought, Type=Lodz.png", 1, 40))
-    boardArr.append(Property(WIN, 5, 7, "Cracow", "bottom", "State=Empty, Type=Cracow.png", "State=Bought, Type=Cracow.png", 2, 50))
-    boardArr.append(Property(WIN, 4, 7, "Warsaw", "bottom", "State=Empty, Type=Warsaw.png", "State=Bought, Type=Warsaw.png", 3, 70))
-    boardArr.append(Property(WIN, 3, 7, "Berlin", "bottom", "State=Empty, Type=Berlin.png", "State=Bought, Type=Berlin.png", 4, 120))
-    boardArr.append(Property(WIN, 2, 7, "Munich", "bottom", "State=Empty, Type=Munich.png", "State=Bought, Type=Munich.png", 5, 150))
-    boardArr.append(Property(WIN, 1, 7, "Dortmund", "bottom", "State=Empty, Type=Dortmund.png", "State=Bought, Type=Dortmund.png", 6, 150))
+    boardArr.append(Special(WIN, 7, 7, "Start" ,"Type=Start.png", 0, 0, 0))
+    boardArr.append(Property(WIN, 6, 7, "Lodz", "bottom", "State=Empty, Type=Lodz.png", "State=Bought, Type=Lodz.png", 1, 40, 10))
+    boardArr.append(Property(WIN, 5, 7, "Cracow", "bottom", "State=Empty, Type=Cracow.png", "State=Bought, Type=Cracow.png", 2, 50, 10))
+    boardArr.append(Property(WIN, 4, 7, "Warsaw", "bottom", "State=Empty, Type=Warsaw.png", "State=Bought, Type=Warsaw.png", 3, 70, 10))
+    boardArr.append(Property(WIN, 3, 7, "Berlin", "bottom", "State=Empty, Type=Berlin.png", "State=Bought, Type=Berlin.png", 4, 120, 20))
+    boardArr.append(Property(WIN, 2, 7, "Munich", "bottom", "State=Empty, Type=Munich.png", "State=Bought, Type=Munich.png", 5, 150, 20))
+    boardArr.append(Property(WIN, 1, 7, "Dortmund", "bottom", "State=Empty, Type=Dortmund.png", "State=Bought, Type=Dortmund.png", 6, 150, 20))
     
     # left wall
-    boardArr.append(Special(WIN, 0, 7, "Jail" ,"Type=Jail.png", 7, 0))
-    boardArr.append(Property(WIN, 0, 6, "Lyon", "left", "State=Empty, Type=Lyon.png", "State=Bought, Type=Lyon.png", 8, 170))
-    boardArr.append(Property(WIN, 0, 5, "Marseille", "left", "State=Empty, Type=Marseille.png", "State=Bought, Type=Marseille.png", 9, 220))
-    boardArr.append(Property(WIN, 0, 4, "Paris", "left", "State=Empty, Type=Paris.png", "State=Bought, Type=Paris.png", 10, 200))
-    boardArr.append(Property(WIN, 0, 3, "Liverpool", "left", "State=Empty, Type=Liverpool.png", "State=Bought, Type=Liverpool.png", 11, 250))
-    boardArr.append(Property(WIN, 0, 2, "Manchester", "left", "State=Empty, Type=Manchester.png", "State=Bought, Type=Manchester.png", 12, 250))
-    boardArr.append(Property(WIN, 0, 1, "London", "left", "State=Empty, Type=London.png", "State=Bought, Type=London.png", 13, 300))
+    boardArr.append(Special(WIN, 0, 7, "Jail" ,"Type=Jail.png", 7, 0, 0))
+    boardArr.append(Property(WIN, 0, 6, "Lyon", "left", "State=Empty, Type=Lyon.png", "State=Bought, Type=Lyon.png", 8, 170, 20))
+    boardArr.append(Property(WIN, 0, 5, "Marseille", "left", "State=Empty, Type=Marseille.png", "State=Bought, Type=Marseille.png", 9, 220, 30))
+    boardArr.append(Property(WIN, 0, 4, "Paris", "left", "State=Empty, Type=Paris.png", "State=Bought, Type=Paris.png", 10, 200, 30))
+    boardArr.append(Property(WIN, 0, 3, "Liverpool", "left", "State=Empty, Type=Liverpool.png", "State=Bought, Type=Liverpool.png", 11, 250, 30))
+    boardArr.append(Property(WIN, 0, 2, "Manchester", "left", "State=Empty, Type=Manchester.png", "State=Bought, Type=Manchester.png", 12, 250, 30))
+    boardArr.append(Property(WIN, 0, 1, "London", "left", "State=Empty, Type=London.png", "State=Bought, Type=London.png", 13, 300, 40))
     
     # top wall
-    boardArr.append(Special(WIN, 0, 0, "Parking" ,"Type=Parking.png", 14, 0))
-    boardArr.append(Property(WIN, 1, 0, "Mediolan", "top", "State=Empty, Type=Mediolan.png", "State=Bought, Type=Mediolan.png", 15, 320))
-    boardArr.append(Property(WIN, 2, 0, "Venice", "top", "State=Empty, Type=Venice.png", "State=Bought, Type=Venice.png", 16, 350))
-    boardArr.append(Property(WIN, 3, 0, "Rome", "top", "State=Empty, Type=Rome.png", "State=Bought, Type=Rome.png", 17, 350))
-    boardArr.append(Property(WIN, 4, 0, "Lisbon", "top", "State=Empty, Type=Lisbon.png", "State=Bought, Type=Lisbon.png", 18, 390))
-    boardArr.append(Property(WIN, 5, 0, "Porto", "top", "State=Empty, Type=Porto.png", "State=Bought, Type=Porto.png", 19, 400))
-    boardArr.append(Property(WIN, 6, 0, "Braga", "top", "State=Empty, Type=Braga.png", "State=Bought, Type=Braga.png", 20, 430))
+    boardArr.append(Special(WIN, 0, 0, "Parking" ,"Type=Parking.png", 14, 0, 0))
+    boardArr.append(Property(WIN, 1, 0, "Mediolan", "top", "State=Empty, Type=Mediolan.png", "State=Bought, Type=Mediolan.png", 15, 320, 40))
+    boardArr.append(Property(WIN, 2, 0, "Venice", "top", "State=Empty, Type=Venice.png", "State=Bought, Type=Venice.png", 16, 350, 40))
+    boardArr.append(Property(WIN, 3, 0, "Rome", "top", "State=Empty, Type=Rome.png", "State=Bought, Type=Rome.png", 17, 350, 40))
+    boardArr.append(Property(WIN, 4, 0, "Lisbon", "top", "State=Empty, Type=Lisbon.png", "State=Bought, Type=Lisbon.png", 18, 390, 40))
+    boardArr.append(Property(WIN, 5, 0, "Porto", "top", "State=Empty, Type=Porto.png", "State=Bought, Type=Porto.png", 19, 400, 50))
+    boardArr.append(Property(WIN, 6, 0, "Braga", "top", "State=Empty, Type=Braga.png", "State=Bought, Type=Braga.png", 20, 430, 50))
 
     # right wall
-    boardArr.append(Special(WIN, 7, 0, "GoToJail" ,"Type=Gotojail.png", 21, 0))
-    boardArr.append(Property(WIN, 7, 1, "Helsinki", "right", "State=Empty, Type=Helsinki.png", "State=Bought, Type=Helsinki.png", 22, 480))
-    boardArr.append(Property(WIN, 7, 2, "Stockholm", "right", "State=Empty, Type=Stockholm.png", "State=Bought, Type=Stockholm.png", 23, 520))
-    boardArr.append(Property(WIN, 7, 3, "Oslo", "right", "State=Empty, Type=Oslo.png", "State=Bought, Type=Oslo.png", 24, 550))
-    boardArr.append(Property(WIN, 7, 4, "Sevilla", "right", "State=Empty, Type=Sevilla.png", "State=Bought, Type=Sevilla.png", 25, 580))
-    boardArr.append(Property(WIN, 7, 5, "Madrid", "right", "State=Empty, Type=Madrid.png", "State=Bought, Type=Madrid.png", 26, 630))
-    boardArr.append(Property(WIN, 7, 6, "Barcelona", "right", "State=Empty, Type=Barcelona.png", "State=Bought, Type=Barcelona.png", 27, 670))
+    boardArr.append(Special(WIN, 7, 0, "GoToJail" ,"Type=Gotojail.png", 21, 0, 0))
+    boardArr.append(Property(WIN, 7, 1, "Helsinki", "right", "State=Empty, Type=Helsinki.png", "State=Bought, Type=Helsinki.png", 22, 480, 50))
+    boardArr.append(Property(WIN, 7, 2, "Stockholm", "right", "State=Empty, Type=Stockholm.png", "State=Bought, Type=Stockholm.png", 23, 520, 60))
+    boardArr.append(Property(WIN, 7, 3, "Oslo", "right", "State=Empty, Type=Oslo.png", "State=Bought, Type=Oslo.png", 24, 550, 60))
+    boardArr.append(Property(WIN, 7, 4, "Sevilla", "right", "State=Empty, Type=Sevilla.png", "State=Bought, Type=Sevilla.png", 25, 580, 60))
+    boardArr.append(Property(WIN, 7, 5, "Madrid", "right", "State=Empty, Type=Madrid.png", "State=Bought, Type=Madrid.png", 26, 630, 70))
+    boardArr.append(Property(WIN, 7, 6, "Barcelona", "right", "State=Empty, Type=Barcelona.png", "State=Bought, Type=Barcelona.png", 27, 670, 70))
     
     return boardArr
 
@@ -279,6 +280,7 @@ def main():
                             event["State"] = False
                             currentPlayer = players[currentTurn]
                             currentTile = currentPlayer.getCurrentTile()
+                            currentMoney = currentPlayer.getMoneyAvailable()
                             board[currentTile].isBought = True
                             board[currentTile].owner = currentPlayer
                             currentPlayer.subMoney(board[currentTile].price)
@@ -295,10 +297,23 @@ def main():
                         if currentTile + moves > 27:
                             currentPlayer.addMoney(200)
                         movePlayerToTile(currentPlayer, newTile)
+                        # Sprawdzanie, czy gracz jest na polu o ID innym od pól 0, 7, 14, 21
                         if board[newTile].id != 7 and board[newTile].id != 14 and board[newTile].id != 21 and board[newTile].id != 0:
                             if board[newTile].owner == None and board[newTile].isBought == False and currentPlayer.getMoneyAvailable()>board[newTile].price:
                                 EVENTS["PLAYER_ON_TILE"]["State"] = True
+                                amount = board[newTile].price
+                                currentPlayer.addToSumOfBought(amount)
                             if board[newTile].owner != currentPlayer and board[newTile].isBought == True:
+                                if currentPlayer.getMoneyAvailable() < board[newTile].fees:
+                                    EVENTS["PLAYER_BROKE"]["State"] = True
+                                    SumOfBought = currentPlayer.getSumOfBought()
+                                    currentPlayer.addMoney(SumOfBought/2)
+                                    for x in board:
+                                        if isinstance(x,Property):
+                                            if x.owner == currentPlayer:
+                                                x.owner = None
+                                                x.isBought = False
+
                                 currentPlayer.subMoney(math.ceil(board[newTile].price/100)*10)
                                 board[newTile].owner.addMoney(math.ceil(board[newTile].price/100)*10)
                         # Sprawdzanie, czy gracz jest na polu o ID równym 21
