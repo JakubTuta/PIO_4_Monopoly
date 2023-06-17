@@ -292,6 +292,7 @@ def main():
                             event["State"]=False
                         elif action == 4:                                       # "NO" button hit
                             event["State"]=False
+                        break
 
                     if event==EVENTS["PLAYER_BROKE"] and event["State"]:
                         if action == 3:                                         # "YES" button hit
@@ -303,6 +304,7 @@ def main():
                                 board[currentTile].owner.addMoney(currentPlayer.getMoneyAvailable())
                                 currentPlayer.setMoneyAvailable(0)
                                 del players[currentPlayer.getTokenColor()]
+                                turns.remove(currentPlayer.getTokenColor())
                             for x in board:
                                 if isinstance(x,Property):
                                     if x.owner == currentPlayer:
@@ -311,6 +313,7 @@ def main():
                             event["State"]=False
                             if len(players) == 1:
                                 EVENTS["PLAYER_WON"]["State"] = True
+                            break
                         elif action == 4:                                       # "NO" button hit
                             currentPlayer = players[currentTurn]
                             currentTile = currentPlayer.getCurrentTile()
@@ -325,12 +328,14 @@ def main():
                             event["State"]=False
                             if len(players) == 1:
                                 EVENTS["PLAYER_WON"]["State"] = True
+                            break
                     if event==EVENTS["PLAYER_ON_TILE"] and event["State"]:
                         if action == 3:                                         # "YES" button hit
                             event["State"]=False
                         elif action == 4:                                       # "NO" button hit
                             event["State"]=False
-                            
+                        break
+                else:
                     if action == 1 and not players[currentTurn].hasRolled:      # roll the dice button clicked
                         players[currentTurn].hasRolled = True
                         moves = tossDice()
