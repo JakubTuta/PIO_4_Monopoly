@@ -3,6 +3,7 @@ from Player import Player
 from Tile import Tile, Property, Special, WINDOW_SIZE, TILE_SIZE
 import pygame                                                   # pip install pygame / pip install pygame --pre
 import os
+import time
 
 PLAYER_IMAGES = {
     "red": pygame.image.load(os.path.join("assets", "Type=red.png")),
@@ -58,6 +59,13 @@ EVENTS = {
         "Text": ("Congratulations, you have won!", "Exit", "Exit"),
         "Position": (EVENT_WINDOW_X + 15, EVENT_WINDOW_Y + EVENT_WINDOW_HEIGHT - BUTTON_WIDTH - 15, BUTTON_WIDTH, BUTTON_HEIGHT)
     }
+}
+
+pygame.init()
+fonts = {
+    "mainFont": pygame.font.SysFont(None, 30),
+    "titleFont": pygame.font.SysFont(None, 40, bold=True),
+    "responseFont": pygame.font.SysFont(None, 25, italic=True)
 }
 
 
@@ -138,11 +146,11 @@ def handleMouseClick(mousePos):
     return 0
 
 
-def drawPlayerTextMoney(WIN, font, titleFont, players, turn):
+def drawPlayerTextMoney(WIN, players, turn):
     if turn in players:
         turnText = f"{turn}'s turn"
-        labelTurnText = titleFont.render(turnText, True, COLORS[turn])
-        textWidth, textHeight = titleFont.size(turnText)
+        labelTurnText = fonts["titleFont"].render(turnText, True, COLORS[turn])
+        textWidth, textHeight = fonts["titleFont"].size(turnText)
         WIN.blit(labelTurnText, ((WINDOW_SIZE / 2 - textWidth / 2), (DICE_POS - textHeight - 10)))
 
     for player in players.values():
@@ -152,10 +160,10 @@ def drawPlayerTextMoney(WIN, font, titleFont, players, turn):
         playerText = f"Player {color}"
         playerMoney = f"Money: {money}"
         
-        labelPlayerText = font.render(playerText, True, COLORS[color])
-        labelPlayerMoney = font.render(playerMoney, True, COLORS["WHITE"])
+        labelPlayerText = fonts["mainFont"].render(playerText, True, COLORS[color])
+        labelPlayerMoney = fonts["mainFont"].render(playerMoney, True, COLORS["WHITE"])
         
-        textWidth, textHeight = font.size(playerText)
+        textWidth, textHeight = fonts["mainFont"].size(playerText)
         
         if color == "red":
             xPos = (WINDOW_SIZE / 2) - (textWidth / 2)
@@ -210,28 +218,25 @@ def drawPlayers(WIN, players, board):
         del players[player.getTokenColor()]
 
 
-def drawEvent(WIN, font, responseFont, eventText, eventYes, eventNo):
+def drawEvent(WIN, eventText, eventYes, eventNo):
     pygame.draw.rect(WIN, COLORS["GRAY"], BUTTONS["Event"]["Window"])
     pygame.draw.rect(WIN, COLORS["DARK_GRAY"], BUTTONS["Event"]["Yes"])
     pygame.draw.rect(WIN, COLORS["DARK_GRAY"], BUTTONS["Event"]["No"])
     
-    labelEventText = font.render(eventText, True, COLORS["WHITE"])
-    labelEventYes = responseFont.render(eventYes, True, COLORS["WHITE"])
-    labelEventNo = responseFont.render(eventNo, True, COLORS["WHITE"])
+    labelEventText = fonts["mainFont"].render(eventText, True, COLORS["WHITE"])
+    labelEventYes = fonts["responseFont"].render(eventYes, True, COLORS["WHITE"])
+    labelEventNo = fonts["responseFont"].render(eventNo, True, COLORS["WHITE"])
     
-    width = font.size(f"{eventText}")[0]
+    width = fonts["mainFont"].size(f"{eventText}")[0]
     WIN.blit(labelEventText, (WINDOW_SIZE / 2 - width / 2, EVENT_WINDOW_Y + 15))
     
-    width, height = responseFont.size(f"{eventYes}")
+    width, height = fonts["responseFont"].size(f"{eventYes}")
     WIN.blit(labelEventYes, (EVENT_WINDOW_X + 15 + BUTTON_WIDTH / 2 - width / 2, EVENT_WINDOW_Y + EVENT_WINDOW_HEIGHT - 15 - BUTTON_HEIGHT / 2 - height / 2))
     
-    width, height = responseFont.size(f"{eventNo}")
+    width, height = fonts["responseFont"].size(f"{eventNo}")
     WIN.blit(labelEventNo, (EVENT_WINDOW_X + EVENT_WINDOW_WIDTH - 15 - BUTTON_WIDTH / 2 - width / 2, EVENT_WINDOW_Y + EVENT_WINDOW_HEIGHT - 15 - BUTTON_HEIGHT / 2 - height / 2))
 
 def draw(WIN, board, players, diceGraphs, RollDiceButtonGraphic, NextTurnButtonGraphic, moves, turn):
-    font = pygame.font.SysFont(None, 30)
-    titleFont = pygame.font.SysFont(None, 40, bold=True)
-    responseFont = pygame.font.SysFont(None, 25, italic=True)
     WIN.fill(COLORS["BLACK"])
     
     for tile in board:
@@ -243,11 +248,11 @@ def draw(WIN, board, players, diceGraphs, RollDiceButtonGraphic, NextTurnButtonG
     WIN.blit(RollDiceButtonGraphic, (BUTTONS["RollDice"][0], BUTTONS["RollDice"][1]))
     WIN.blit(NextTurnButtonGraphic, (BUTTONS["NextTurn"][0], BUTTONS["NextTurn"][1]))
     
-    drawPlayerTextMoney(WIN, font, titleFont, players, turn)
+    drawPlayerTextMoney(WIN, players, turn)
     
     for event in EVENTS.values():
         if event["State"]:
-            drawEvent(WIN, font, responseFont, *event["Text"])
+            drawEvent(WIN, *event["Text"])
             break
 
 def nextTurn(turns):
@@ -257,7 +262,6 @@ def nextTurn(turns):
 
 
 def main(): 
-    pygame.init()
     WIN = pygame.display.set_mode((WINDOW_SIZE, WINDOW_SIZE))
     pygame.display.set_caption("Monopoly")
     
@@ -289,6 +293,13 @@ def main():
                             currentPlayer.subMoney(board[currentTile].price)
                             amount = board[currentTile].price
                             currentPlayer.addToSumOfBought(amount)
+                            
+                            drawEvent(WIN, f"{currentPlayer.getTokenColor()} just bought {board[currentTile].name}", "Ok", "Ok")
+                            pygame.display.update()
+                            start = time.time()
+                            while time.time() - start < 2:
+                                pass
+                            
                             event["State"]=False
                         elif action == 4:                                       # "NO" button hit
                             event["State"]=False
